@@ -1,0 +1,191 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI, sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#F9F7F3;
+color:#2E2E2E;
+}
+
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 80px;
+background:#FFFFFF;
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
+}
+
+.logo{
+color:#1F7A8C;
+}
+
+nav ul{
+display:flex;
+list-style:none;
+}
+
+nav ul li{
+margin-left:30px;
+}
+
+nav ul li a{
+text-decoration:none;
+color:#2E2E2E;
+font-weight:600;
+transition:0.3s;
+}
+
+nav ul li a:hover{
+color:#1F7A8C;
+}
+
+/* HERO */
+
+.hero{
+height:90vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:linear-gradient(120deg,#e0d0ae,#E8EFEA);
+}
+
+.hero span{
+color:#1F7A8C;
+}
+
+.btn{
+background:#1F7A8C;
+color:white;
+padding:12px 25px;
+margin:10px;
+border-radius:6px;
+text-decoration:none;
+transition:0.3s;
+}
+
+.btn:hover{
+background:#166272;
+}
+
+.btn-outline{
+border:2px solid #1F7A8C;
+padding:12px 25px;
+border-radius:6px;
+text-decoration:none;
+color:#1F7A8C;
+}
+
+/* SECTIONS */
+
+section{
+padding:80px 100px;
+text-align:center;
+}
+
+/* SKILLS */
+
+.skills{
+max-width:600px;
+margin:auto;
+}
+
+.progress{
+background:#f0b8b8;
+height:8px;
+border-radius:4px;
+margin:10px 0 25px 0;
+}
+
+.progress span{
+display:block;
+height:8px;
+background:#88A096;
+border-radius:4px;
+}
+
+/* PROJECTS */
+
+.projects{
+display:flex;
+justify-content:center;
+gap:40px;
+}
+
+.project-card{
+background:#FFFFFF;
+padding:30px;
+width:300px;
+border-radius:10px;
+box-shadow:0 10px 20px rgba(0,0,0,0.08);
+transition:0.3s;
+}
+
+.project-card:hover{
+transform:translateY(-10px);
+}
+
+.tech{
+color:#666;
+font-size:14px;
+}
+
+/* INTERESTS */
+
+.interests ul{
+display:flex;
+justify-content:center;
+gap:30px;
+list-style:none;
+margin-top:20px;
+}
+
+/* CONTACT */
+
+.links a{
+margin:10px;
+text-decoration:none;
+font-weight:600;
+color:#1F7A8C;
+}
+
+/* FORM */
+
+form{
+display:flex;
+flex-direction:column;
+width:300px;
+margin:30px auto;
+}
+
+input,textarea{
+margin:10px 0;
+padding:10px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+button{
+background:#1F7A8C;
+color:rgb(255, 255, 255);
+padding:10px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* FOOTER */
+
+footer{
+background:#2E2E2E;
+color:white;
+text-align:center;
+padding:20px;
+}

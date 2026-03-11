@@ -1,0 +1,101 @@
+body{
+font-family:Arial;
+background:#f4f6f9;
+margin:0;
+}
+
+header{
+background:#2c3e50;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.feedback-container{
+display:flex;
+justify-content:center;
+align-items:center;
+margin-top:40px;
+}
+
+form{
+background:white;
+padding:30px;
+width:350px;
+border-radius:12px;
+box-shadow:0 6px 15px rgba(0,0,0,0.15);
+}
+
+label{
+display:block;
+margin-top:15px;
+}
+
+input, textarea{
+width:100%;
+padding:10px;
+margin-top:5px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.rating{
+display:flex;
+flex-direction:row-reverse;
+justify-content:flex-end;
+}
+
+.rating input{
+display:none;
+}
+
+.rating label{
+font-size:25px;
+color:#ccc;
+cursor:pointer;
+}
+
+.rating input:checked ~ label{
+color:gold;
+}
+
+.rating label:hover,
+.rating label:hover ~ label{
+color:gold;
+}
+
+button{
+margin-top:20px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+background:#27ae60;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#1e8449;
+transform:scale(1.05);
+}
+
+.back{
+text-align:center;
+margin-top:15px;
+}
+
+.back a{
+text-decoration:none;
+color:#2c3e50;
+}
+
+footer{
+text-align:center;
+background:#2c3e50;
+color:white;
+padding:15px;
+margin-top:40px;
+}
