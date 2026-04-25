@@ -1,0 +1,61 @@
+body {
+  font-family: Arial;
+  background: linear-gradient(to right, #f5f5dc, #fff8e7);
+  text-align: center;
+}
+
+.container {
+  width: 400px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 50px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+input, button {
+  padding: 10px;
+  margin: 10px;
+  width: 80%;
+}
+
+button {
+  background: brown;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a2d0c;
+}
+
+.hidden {
+  display: none;
+}
+
+#slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.slot {
+  background: #eee;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.slot.selected {
+  background: brown;
+  color: white;
+}
+
+#notification {
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+}

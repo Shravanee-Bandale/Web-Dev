@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Appointment Booking System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Appointment Booking</h1>
+
+  <!-- Login/Register -->
+  <div id="auth">
+    <input type="text" id="username" placeholder="Enter your name">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+
+    <h2 id="welcome"></h2>
+
+    <!-- Slot Selection -->
+    <h3>Select Date</h3>
+    <input type="date" id="date">
+
+    <h3>Select Time Slot</h3>
+    <div id="slots"></div>
+
+    <button onclick="bookAppointment()">Book Appointment</button>
+
+    <!-- Appointments -->
+    <h3>Your Appointments</h3>
+    <ul id="appointments"></ul>
+
+  </div>
+
+  <!-- Notification -->
+  <div id="notification"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
