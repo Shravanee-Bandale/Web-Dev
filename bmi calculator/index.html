@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BMI Health Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>Health Dashboard</h1>
+    <button id="toggle-mode">🌙</button>
+  </header>
+
+  <!-- PROFILE -->
+  <section class="card">
+    <h2>Profile</h2>
+    <input type="text" id="name" placeholder="Name">
+    <input type="number" id="age" placeholder="Age">
+    <select id="gender">
+      <option>Male</option>
+      <option>Female</option>
+    </select>
+    <button onclick="saveProfile()">Save</button>
+  </section>
+
+  <!-- BMI -->
+  <section class="card">
+    <h2>BMI Calculator</h2>
+    <input type="number" id="height" placeholder="Height (cm)">
+    <input type="number" id="weight" placeholder="Weight (kg)">
+    <button id="calc-btn">Calculate</button>
+    <div id="result"></div>
+    <div id="goal"></div>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="card">
+    <h2>History</h2>
+    <ul id="history"></ul>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
