@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Parking System - My Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: #4f46e5;
+      color: white;
+      padding: 14px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .navbar .logo { font-size: 20px; font-weight: 800; }
+    .navbar .logo span { color: #fbbf24; }
+    .nav-right { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+    .live-badge {
+      background: #22c55e;
+      color: white;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      animation: blink 1.6s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.7} }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: white; }
+
+    .banner {
+      background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+      color: white;
+      text-align: center;
+      padding: 28px 20px 22px;
+    }
+    .banner h1 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+    .banner h1 span { color: #fde047; }
+    .banner p { font-size: 13px; opacity: .85; }
+    .banner .credit { margin-top: 8px; font-size: 11px; opacity: .65; font-style: italic; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 22px 16px 50px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat-card {
+      border-radius: 14px;
+      padding: 16px 14px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .stat-card::after {
+      content: attr(data-icon);
+      position: absolute;
+      right: 10px; bottom: 6px;
+      font-size: 34px;
+      opacity: 0.18;
+    }
+    .stat-card.blue  { background: linear-gradient(135deg,#3b82f6,#6366f1); }
+    .stat-card.green { background: linear-gradient(135deg,#22c55e,#16a34a); }
+    .stat-card.red   { background: linear-gradient(135deg,#ef4444,#dc2626); }
+    .stat-card.yel   { background: linear-gradient(135deg,#f59e0b,#d97706); }
+    .slabel { font-size: 10px; font-weight: 700; opacity: .85; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 5px; }
+    .sval   { font-size: 30px; font-weight: 800; line-height: 1; }
+    .ssub   { font-size: 10px; opacity: .75; margin-top: 3px; }
+
+    .sec-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1e1b4b;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sec-title .badge {
+      background: #e0e7ff;
+      color: #4f46e5;
+      border-radius: 6px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .filter-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+    }
+    .fbtn {
+      border: 2px solid #e0e7ff;
+      background: #f5f3ff;
+      color: #4f46e5;
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .fbtn:hover { background: #e0e7ff; }
+    .fbtn.active { background: #4f46e5; color: white; border-color: #4f46e5; }
+
+    .search-box {
+      margin-left: auto;
+      border: 2px solid #e0e7ff;
+      border-radius: 8px;
+      padding: 5px 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      color: #1e1b4b;
+      outline: none;
+      width: 160px;
+    }
+    .search-box:focus { border-color: #6366f1; }
+
+    .refresh-btn {
+      background: #f59e0b;
+      color: white;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .refresh-btn:hover { background: #d97706; }
+    .refresh-btn:active { transform: scale(.97); }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #374151; }
+    .leg-box { width: 14px; height: 14px; border-radius: 3px; }
+    .leg-box.avail { background: #bbf7d0; border: 2px solid #22c55e; }
+    .leg-box.occ   { background: #fecaca; border: 2px solid #ef4444; }
+    .leg-box.res   { background: #fef08a; border: 2px solid #eab308; }
+    .leg-box.dis   { background: #e5e7eb; border: 2px solid #9ca3af; }
+
+    .zones-wrap { display: flex; flex-direction: column; gap: 18px; }
+
+    .zone-card {
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+      border: 2px solid transparent;
+      transition: border-color .2s;
+    }
+    .zone-card:hover { border-color: #a5b4fc; }
+
+    .zone-head {
+      padding: 13px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px dashed #e0e7ff;
+    }
+    .zone-head.b1 { background: linear-gradient(90deg,#ede9fe,#fdf4ff); }
+    .zone-head.b2 { background: linear-gradient(90deg,#fef9c3,#fef3c7); }
+    .zone-head.b3 { background: linear-gradient(90deg,#dcfce7,#d1fae5); }
+
+    .zone-label { font-size: 14px; font-weight: 800; color: #1e1b4b; }
+    .zone-sub   { font-size: 11px; color: #6b7280; margin-top: 1px; }
+    .zone-pill  { background: #4f46e5; color: white; border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700; }
+
+    .zone-body { padding: 14px; }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+      gap: 7px;
+    }
+
+    .slot {
+      border-radius: 10px;
+      padding: 8px 4px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      border: 2px solid transparent;
+    }
+    .slot:hover { transform: translateY(-3px); box-shadow: 0 5px 14px rgba(0,0,0,.12); }
+    .slot.available { background: #f0fdf4; border-color: #86efac; }
+    .slot.occupied  { background: #fff1f2; border-color: #fca5a5; }
+    .slot.reserved  { background: #fefce8; border-color: #fde047; }
+    .slot.disabled  { background: #f9fafb; border-color: #d1d5db; opacity:.6; cursor:not-allowed; }
+
+    .slot-id { font-size: 10px; font-weight: 700; }
+    .slot.available .slot-id { color: #16a34a; }
+    .slot.occupied  .slot-id { color: #dc2626; }
+    .slot.reserved  .slot-id { color: #ca8a04; }
+    .slot.disabled  .slot-id { color: #9ca3af; }
+
+    .slot-status { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
+    .slot.available .slot-status { color: #22c55e; }
+    .slot.occupied  .slot-status { color: #ef4444; }
+    .slot.reserved  .slot-status { color: #eab308; }
+    .slot.disabled  .slot-status { color: #9ca3af; }
+
+    .slot-tag { font-size: 8px; background: #e0e7ff; color: #4f46e5; border-radius: 3px; padding: 1px 4px; font-weight: 600; }
+
+    #tooltip {
+      position: fixed;
+      background: #1e1b4b;
+      color: white;
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 12px;
+      font-family: 'Poppins', sans-serif;
+      pointer-events: none;
+      z-index: 9999;
+      display: none;
+      min-width: 145px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.25);
+    }
+    #tooltip .tid { font-size: 13px; font-weight: 700; color: #fde047; margin-bottom: 5px; }
+    #tooltip .trow { display: flex; justify-content: space-between; gap: 10px; margin: 2px 0; }
+    #tooltip .tkey { color: #a5b4fc; }
+
+    .modal-bg {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.open { display: flex; }
+    .modal-box {
+      background: white;
+      border-radius: 16px;
+      padding: 26px;
+      width: 92%; max-width: 360px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.2);
+      position: relative;
+      border-top: 5px solid #6366f1;
+    }
+    .modal-box h3 { font-size: 15px; font-weight: 800; color: #1e1b4b; margin-bottom: 3px; }
+    .modal-box .msub { font-size: 12px; color: #6b7280; margin-bottom: 16px; }
+    .mfield { margin-bottom: 11px; }
+    .mfield label { font-size: 10px; font-weight: 700; color: #4f46e5; display: block; margin-bottom: 3px; text-transform: uppercase; letter-spacing: .5px; }
+    .mfield input, .mfield select {
+      width: 100%;
+      border: 2px solid #e0e7ff;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      color: #1e1b4b;
+      outline: none;
+    }
+    .mfield input:focus, .mfield select:focus { border-color: #6366f1; }
+    .mbtns { display: flex; gap: 8px; margin-top: 16px; }
+    .mbtn { flex:1; padding:9px; border-radius:8px; font-family:'Poppins',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:2px solid transparent; text-align:center; transition:opacity .2s; }
+    .mbtn:hover { opacity:.88; }
+    .mbtn:active { transform:scale(.97); }
+    .mbtn.cancel  { background:#f3f4f6; color:#374151; border-color:#e5e7eb; }
+    .mbtn.confirm { background:#4f46e5; color:white; }
+    .mclose { position:absolute; top:13px; right:14px; background:none; border:none; font-size:18px; color:#9ca3af; cursor:pointer; }
+    .mclose:hover { color:#374151; }
+
+    #toast {
+      position: fixed; bottom: 20px; right: 20px;
+      padding: 11px 16px; border-radius: 10px;
+      font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
+      color: white; z-index: 999;
+      opacity: 0; transform: translateY(8px);
+      transition: all .3s; max-width: 260px;
+    }
+    #toast.show { opacity:1; transform:translateY(0); }
+    #toast.success { background:#22c55e; }
+    #toast.error   { background:#ef4444; }
+
+    #lastUpdated { text-align:center; font-size:11px; color:#9ca3af; margin-top:14px; }
+    .footer { text-align:center; margin-top:26px; font-size:12px; color:#9ca3af; }
+    .footer b { color:#6366f1; }
+
+    @media(max-width:640px){
+      .stats-grid { grid-template-columns:repeat(2,1fr); }
+      .banner h1 { font-size:20px; }
+      .search-box { width:100%; margin-left:0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="logo">🅿️ Smart<span>Park</span></div>
+  <div class="nav-right">
+    <div class="live-badge"><span class="dot"></span> LIVE</div>
+    <span style="opacity:.7;font-size:12px">Riverside Mall</span>
+  </div>
+</div>
+
+<div class="banner">
+  <h1>🚗 Smart Parking <span>System</span></h1>
+  <p>Real-time parking slot availability · Levels B1, B2 and B3</p>
+  <div class="credit">Mini Project · Computer Science Dept · 2nd Year · Group 4</div>
+</div>
+
+<div class="container">
+
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <div class="filter-bar">
+    <button class="fbtn active" onclick="setFilter('all',this)">🏢 All Floors</button>
+    <button class="fbtn" onclick="setFilter('B1',this)">Level B1</button>
+    <button class="fbtn" onclick="setFilter('B2',this)">Level B2</button>
+    <button class="fbtn" onclick="setFilter('B3',this)">Level B3</button>
+    <button class="fbtn" onclick="setFilter('ev',this)">⚡ EV Only</button>
+    <button class="fbtn" onclick="setFilter('handicap',this)">♿ Accessible</button>
+    <button class="refresh-btn" onclick="simulateUpdate()">🔄 Refresh</button>
+    <input class="search-box" type="text" id="searchInput" placeholder="🔍 Search slot..." oninput="renderAll()">
+  </div>
+
+  <div class="legend">
+    <div class="leg-item"><div class="leg-box avail"></div> Available</div>
+    <div class="leg-item"><div class="leg-box occ"></div> Occupied</div>
+    <div class="leg-item"><div class="leg-box res"></div> Reserved</div>
+    <div class="leg-item"><div class="leg-box dis"></div> Maintenance</div>
+  </div>
+
+  <div class="sec-title">Parking Map <span class="badge" id="availCount">—</span></div>
+  <div class="zones-wrap" id="zonesWrap"></div>
+
+  <div id="lastUpdated"></div>
+  <div class="footer">Made with ❤️ by <b>Student Project Group 4</b> · Web Technology Lab</div>
+</div>
+
+<div id="tooltip"></div>
+
+<div class="modal-bg" id="reserveModal">
+  <div class="modal-box">
+    <button class="mclose" onclick="closeModal('reserveModal')">✕</button>
+    <h3 id="resTitle">Reserve Slot</h3>
+    <p class="msub" id="resDesc">Fill in your details below.</p>
+    <div class="mfield">
+      <label>Vehicle Plate No.</label>
+      <input id="plateInput" type="text" placeholder="e.g. MH 04 AB 1234" />
+    </div>
+    <div class="mfield">
+      <label>Duration</label>
+      <select id="durationSel">
+        <option>1 hour</option><option>2 hours</option><option>4 hours</option><option>All day</option>
+      </select>
+    </div>
+    <div class="mfield">
+      <label>Vehicle Type</label>
+      <select id="vtypeSel">
+        <option>Car</option><option>SUV / Van</option><option>Motorcycle</option><option>Electric Vehicle</option>
+      </select>
+    </div>
+    <div class="mbtns">
+      <button class="mbtn cancel" onclick="closeModal('reserveModal')">Cancel</button>
+      <button class="mbtn confirm" onclick="confirmReserve()">✅ Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const ZONES=[
+  {id:'B1',name:'Level B1 — Ground Floor',desc:'Near main entrance & elevator',cls:'b1'},
+  {id:'B2',name:'Level B2 — Middle Floor',desc:'Near stairwell C & food court',cls:'b2'},
+  {id:'B3',name:'Level B3 — Lower Floor', desc:'Overflow area · farther from exit',cls:'b3'},
+];
+const POOL=['available','available','available','available','occupied','occupied','occupied','reserved','disabled'];
+const rnd=n=>Math.floor(Math.random()*n);
+const randSince=()=>{const m=rnd(100)+1;return m<60?`${m}m ago`:`${Math.floor(m/60)}h ${m%60}m`;};
+const makeId=(z,i)=>`${z}-${String.fromCharCode(65+Math.floor(i/10))}${String(i%10+1).padStart(2,'0')}`;
+
+let zones=ZONES.map(zm=>({...zm,slots:Array.from({length:40},(_,i)=>({
+  id:makeId(zm.id,i),
+  status:POOL[rnd(POOL.length)],
+  type:i%14===0?'handicap':i%7===0?'ev':i%4===0?'compact':'standard',
+  since:randSince(),plate:null
+}))}));
+
+let activeFilter='all',pendingId=null;
+const allSlots=()=>zones.flatMap(z=>z.slots);
+const typeTag=t=>({standard:'STD',compact:'CMP',ev:'EV⚡',handicap:'♿'}[t]||t);
+const statusShort=s=>({available:'FREE',occupied:'USED',reserved:'RESV',disabled:'MAINT'}[s]||s);
+
+function renderStats(){
+  const total=allSlots().length;
+  const avail=allSlots().filter(s=>s.status==='available').length;
+  const occ=allSlots().filter(s=>s.status==='occupied').length;
+  const rate=Math.round(occ/total*100);
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card blue" data-icon="🏢"><div class="slabel">Total Slots</div><div class="sval">${total}</div><div class="ssub">3 levels</div></div>
+    <div class="stat-card green" data-icon="✅"><div class="slabel">Available</div><div class="sval">${avail}</div><div class="ssub">open now</div></div>
+    <div class="stat-card red" data-icon="🚗"><div class="slabel">Occupied</div><div class="sval">${occ}</div><div class="ssub">vehicles inside</div></div>
+    <div class="stat-card yel" data-icon="📊"><div class="slabel">Occ. Rate</div><div class="sval">${rate}%</div><div class="ssub">of capacity</div></div>
+  `;
+  const a=allSlots().filter(s=>s.status==='available').length;
+  document.getElementById('availCount').textContent=`${a} slots free`;
+}
+
+function renderAll(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const isType=activeFilter==='ev'||activeFilter==='handicap';
+  const vis=isType||activeFilter==='all'?zones:zones.filter(z=>z.id===activeFilter);
+
+  document.getElementById('zonesWrap').innerHTML=vis.map(zone=>{
+    let slots=zone.slots;
+    if(activeFilter==='ev') slots=slots.filter(s=>s.type==='ev');
+    if(activeFilter==='handicap') slots=slots.filter(s=>s.type==='handicap');
+    if(q) slots=slots.filter(s=>s.id.toLowerCase().includes(q));
+    const avail=slots.filter(s=>s.status==='available').length;
+
+    return `<div class="zone-card">
+      <div class="zone-head ${zone.cls}">
+        <div><div class="zone-label">🅿️ ${zone.name}</div><div class="zone-sub">${zone.desc}</div></div>
+        <div class="zone-pill">✅ ${avail} free / ${slots.length}</div>
+      </div>
+      <div class="zone-body">
+        <div class="slots-grid">
+          ${slots.map(s=>`
+            <div class="slot ${s.status}"
+              onmouseenter="showTip(event,${JSON.stringify(s).replace(/"/g,'&quot;')})"
+              onmouseleave="hideTip()"
+              onclick="slotClick('${s.id}')">
+              <div class="slot-id">${s.id.split('-').slice(1).join('')}</div>
+              <div class="slot-status">${statusShort(s.status)}</div>
+              <div class="slot-tag">${typeTag(s.type)}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showTip(e,s){
+  const t=document.getElementById('tooltip');
+  const c={available:'#22c55e',occupied:'#ef4444',reserved:'#eab308',disabled:'#9ca3af'}[s.status];
+  t.innerHTML=`<div class="tid">${s.id}</div>
+    <div class="trow"><span class="tkey">Status</span><span style="color:${c};font-weight:700">${s.status.toUpperCase()}</span></div>
+    <div class="trow"><span class="tkey">Type</span><span>${s.type}</span></div>
+    <div class="trow"><span class="tkey">Since</span><span>${s.since}</span></div>
+    ${s.plate?`<div class="trow"><span class="tkey">Plate</span><span>${s.plate}</span></div>`:''}
+    ${s.status==='available'?'<div style="margin-top:6px;color:#86efac;font-size:11px">👆 Click to reserve!</div>':''}`;
+  t.style.display='block';
+  posTip(e);
+}
+document.addEventListener('mousemove',e=>{ if(document.getElementById('tooltip').style.display==='block') posTip(e); });
+function posTip(e){
+  const t=document.getElementById('tooltip');
+  const x=e.clientX+14,y=e.clientY-10;
+  t.style.left=(x+t.offsetWidth>window.innerWidth?x-t.offsetWidth-28:x)+'px';
+  t.style.top=(y+t.offsetHeight>window.innerHeight?y-t.offsetHeight:y)+'px';
+}
+function hideTip(){ document.getElementById('tooltip').style.display='none'; }
+
+function slotClick(id){
+  const s=allSlots().find(x=>x.id===id);
+  if(!s||s.status!=='available') return;
+  pendingId=id;
+  document.getElementById('resTitle').textContent=`Reserve Slot ${id}`;
+  document.getElementById('resDesc').textContent=`Type: ${s.type} · Confirm to reserve.`;
+  document.getElementById('plateInput').value='';
+  document.getElementById('reserveModal').classList.add('open');
+}
+
+function confirmReserve(){
+  const plate=document.getElementById('plateInput').value.trim();
+  if(!plate){ toast('⚠️ Please enter your plate number!','error'); return; }
+  const s=allSlots().find(x=>x.id===pendingId);
+  if(s){ s.status='reserved'; s.plate=plate.toUpperCase(); s.since='just now'; }
+  closeModal('reserveModal');
+  renderStats(); renderAll();
+  toast(`✅ Slot ${pendingId} reserved for ${plate.toUpperCase()}!`,'success');
+}
+
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(el=>el.addEventListener('click',e=>{ if(e.target===el) el.classList.remove('open'); }));
+
+function setFilter(f,btn){
+  activeFilter=f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+
+function simulateUpdate(){
+  zones.forEach(zone=>{
+    const n=rnd(5)+2;
+    for(let i=0;i<n;i++){
+      const s=zone.slots[rnd(zone.slots.length)];
+      if(s.status==='disabled') continue;
+      if(s.status==='available'){ s.status=Math.random()>.4?'occupied':'reserved'; s.since=randSince(); }
+      else{ s.status='available'; s.since='just now'; s.plate=null; }
+    }
+  });
+  renderStats(); renderAll();
+  document.getElementById('lastUpdated').textContent='🕒 Last updated: '+new Date().toLocaleTimeString();
+}
+
+let tTimer=null;
+function toast(msg,type){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className=`show ${type}`;
+  if(tTimer) clearTimeout(tTimer);
+  tTimer=setTimeout(()=>el.className='',3200);
+}
+
+renderStats(); renderAll();
+document.getElementById('lastUpdated').textContent='🕒 Last updated: '+new Date().toLocaleTimeString();
+setInterval(simulateUpdate,8000);
+</script>
+</body>
+</html>
