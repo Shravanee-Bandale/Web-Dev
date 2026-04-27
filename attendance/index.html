@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Attendance System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>Student Attendance System</h1>
+
+    <!-- Add Student -->
+    <div class="add-student">
+      <input type="text" id="studentName" placeholder="Enter student name">
+      <button onclick="addStudent()">Add Student</button>
+    </div>
+
+    <!-- Attendance Table -->
+    <table id="attendanceTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Present</th>
+          <th>Absent</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- Buttons -->
+    <div class="actions">
+      <button onclick="generateReport()">Generate Report</button>
+    </div>
+
+    <!-- Report -->
+    <div id="report"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
