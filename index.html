@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealchQ – Pre-Delivery Inspection Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d2b55;
+    --green: #1db954;
+    --green-light: #e8f8ee;
+    --green-mid: #2dce6a;
+    --white: #ffffff;
+    --off-white: #f4f9f6;
+    --text: #1a1a2e;
+    --muted: #6b7a8d;
+    --border: #d6e8dd;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 5%;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    animation: slideDown .5s ease forwards;
+  }
+  @keyframes slideDown { from { transform: translateY(-100%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem; font-weight: 800;
+    color: var(--navy);
+    display: flex; align-items: center; gap: .3rem;
+  }
+  .logo span { color: var(--green); }
+  .logo svg { width: 26px; height: 26px; }
+
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav ul a {
+    text-decoration: none; color: var(--text);
+    font-size: .9rem; font-weight: 500;
+    position: relative; transition: color .2s;
+  }
+  nav ul a::after {
+    content: ''; position: absolute; bottom: -3px; left: 0; right: 0; height: 2px;
+    background: var(--green); transform: scaleX(0); transition: transform .2s;
+  }
+  nav ul a:hover { color: var(--green); }
+  nav ul a:hover::after { transform: scaleX(1); }
+
+  .nav-cta {
+    background: var(--navy); color: var(--white) !important;
+    padding: .5rem 1.2rem; border-radius: 50px;
+    font-weight: 600 !important; transition: background .2s !important;
+  }
+  .nav-cta:hover { background: var(--green) !important; color: var(--white) !important; }
+  .nav-cta::after { display: none !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+    gap: 4rem; padding: 8rem 5% 5rem;
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #f0faf4 0%, #e8f5fd 100%);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(29,185,84,.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(13,43,85,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-text { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--green-light); color: var(--green);
+    font-size: .8rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    padding: .4rem 1rem; border-radius: 50px; margin-bottom: 1.5rem;
+    animation: fadeUp .6s ease .2s both;
+  }
+  .hero-eyebrow::before { content: '✓'; font-size: 1rem; }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 800; line-height: 1.1;
+    color: var(--navy);
+    animation: fadeUp .6s ease .35s both;
+  }
+  .hero h1 em { color: var(--green); font-style: normal; }
+
+  .hero-tagline {
+    font-size: 1.05rem; color: var(--muted); line-height: 1.7;
+    margin: 1.5rem 0 2.5rem;
+    animation: fadeUp .6s ease .5s both;
+  }
+
+  .hero-btns {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    animation: fadeUp .6s ease .65s both;
+  }
+  .btn-primary, .btn-secondary {
+    padding: .85rem 2rem; border-radius: 50px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem;
+    text-decoration: none; display: inline-flex; align-items: center; gap: .5rem;
+    transition: all .25s;
+  }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--green); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(29,185,84,.35); }
+  .btn-secondary { border: 2px solid var(--navy); color: var(--navy); }
+  .btn-secondary:hover { background: var(--navy); color: var(--white); transform: translateY(-2px); }
+
+  .hero-visual {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; align-items: center;
+    animation: fadeUp .6s ease .4s both;
+  }
+
+  .hero-card {
+    background: var(--white);
+    border-radius: 2rem; overflow: hidden;
+    box-shadow: 0 30px 80px rgba(13,43,85,.15);
+    width: 100%; max-width: 420px;
+    position: relative;
+  }
+  .hero-card-header {
+    background: var(--navy); padding: 2rem;
+    text-align: center; color: var(--white);
+  }
+  .hero-card-header .logo-large {
+    font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
+    color: var(--white); margin-bottom: .3rem;
+  }
+  .hero-card-header .logo-large span { color: var(--green-mid); }
+  .hero-card-header p { font-size: .85rem; opacity: .75; }
+
+  .checklist { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: .9rem; }
+  .check-item {
+    display: flex; align-items: center; gap: .8rem;
+    font-size: .92rem; color: var(--text); font-weight: 500;
+    padding: .6rem .8rem; border-radius: .8rem; transition: background .2s;
+  }
+  .check-item:hover { background: var(--green-light); }
+  .check-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--green); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: .8rem; color: var(--white);
+  }
+
+  .hero-badge {
+    position: absolute; top: -15px; right: -15px;
+    background: var(--green); color: var(--white);
+    width: 80px; height: 80px; border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700;
+    text-align: center; text-transform: uppercase; letter-spacing: .03em;
+    box-shadow: 0 4px 20px rgba(29,185,84,.4);
+    animation: spin 8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hero-badge span { font-size: 1.4rem; animation: spin 8s linear infinite reverse; }
+
+  /* stats bar */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 0; background: var(--navy);
+    padding: 2.5rem 5%;
+  }
+  .stat-item {
+    text-align: center; padding: 1rem;
+    border-right: 1px solid rgba(255,255,255,.12);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.4rem; font-weight: 800; color: var(--green-mid);
+    line-height: 1;
+  }
+  .stat-label { font-size: .8rem; color: rgba(255,255,255,.6); margin-top: .3rem; }
+
+  /* ── SERVICES ── */
+  .services { padding: 6rem 5%; background: var(--off-white); }
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .section-tag {
+    display: inline-block; background: var(--green-light); color: var(--green);
+    font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    padding: .35rem .9rem; border-radius: 50px; margin-bottom: 1rem;
+  }
+  .section-header h2 {
+    font-family: 'Syne', sans-serif; font-size: clamp(1.8rem,3.5vw,2.8rem);
+    font-weight: 800; color: var(--navy); line-height: 1.2;
+  }
+  .section-header p { color: var(--muted); max-width: 520px; margin: 1rem auto 0; line-height: 1.7; }
+
+  .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+
+  .service-card {
+    background: var(--white); border-radius: 1.5rem;
+    padding: 2rem; border: 1px solid var(--border);
+    transition: all .3s; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--green), var(--navy));
+    transform: scaleX(0); transform-origin: left; transition: transform .3s;
+  }
+  .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(13,43,85,.1); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    width: 52px; height: 52px; border-radius: 1rem;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.2rem;
+  }
+  .service-card h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: .5rem; }
+  .service-card p { font-size: .88rem; color: var(--muted); line-height: 1.65; }
+
+  /* ── HOW IT WORKS ── */
+  .how { padding: 6rem 5%; }
+  .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; margin-top: 3rem; position: relative; }
+  .steps::before {
+    content: ''; position: absolute; top: 30px; left: calc(12.5% + 15px); right: calc(12.5% + 15px);
+    height: 2px; background: linear-gradient(90deg, var(--green), var(--navy));
+    z-index: 0;
+  }
+
+  .step { text-align: center; position: relative; z-index: 1; }
+  .step-num {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--navy); color: var(--white);
+    font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.2rem;
+    box-shadow: 0 4px 20px rgba(13,43,85,.25);
+    transition: background .2s;
+  }
+  .step:hover .step-num { background: var(--green); }
+  .step h4 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: .4rem; }
+  .step p { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── WHY US ── */
+  .why { padding: 6rem 5%; background: var(--navy); position: relative; overflow: hidden; }
+  .why::before {
+    content: ''; position: absolute; top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(29,185,84,.15) 0%, transparent 60%);
+  }
+
+  .why .section-tag { background: rgba(29,185,84,.15); color: var(--green-mid); }
+  .why .section-header h2 { color: var(--white); }
+  .why .section-header p { color: rgba(255,255,255,.55); }
+
+  .why-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .why-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 1.5rem; padding: 2rem;
+    transition: all .3s;
+  }
+  .why-card:hover { background: rgba(29,185,84,.12); border-color: rgba(29,185,84,.3); transform: translateY(-4px); }
+  .why-card .why-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .why-card h4 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: .5rem; }
+  .why-card p { font-size: .87rem; color: rgba(255,255,255,.55); line-height: 1.65; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { padding: 6rem 5%; background: var(--off-white); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
+  .testi-card {
+    background: var(--white); border-radius: 1.5rem; padding: 2rem;
+    border: 1px solid var(--border); transition: all .3s;
+  }
+  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(13,43,85,.08); }
+  .stars { color: #f5a623; font-size: 1rem; margin-bottom: 1rem; letter-spacing: .1em; }
+  .testi-card blockquote { font-size: .92rem; color: var(--text); line-height: 1.7; font-style: italic; margin-bottom: 1.2rem; }
+  .testi-author { font-size: .85rem; font-weight: 600; color: var(--navy); }
+  .testi-loc { font-size: .78rem; color: var(--muted); }
+
+  /* ── CONTACT ── */
+  .contact {
+    padding: 6rem 5%;
+    background: linear-gradient(135deg, #0d2b55 0%, #1a4a7a 100%);
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .contact::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .contact h2 {
+    font-family: 'Syne', sans-serif; font-size: clamp(2rem,4vw,3rem); font-weight: 800;
+    color: var(--white); margin-bottom: 1rem; position: relative;
+  }
+  .contact h2 em { color: var(--green-mid); font-style: normal; }
+  .contact p { color: rgba(255,255,255,.65); max-width: 480px; margin: 0 auto 2.5rem; line-height: 1.7; position: relative; }
+
+  .contact-cards { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; position: relative; margin-bottom: 2.5rem; }
+  .contact-card {
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 1.2rem; padding: 1.5rem 2rem; min-width: 200px;
+    transition: all .3s;
+  }
+  .contact-card:hover { background: rgba(29,185,84,.15); border-color: rgba(29,185,84,.4); transform: translateY(-4px); }
+  .contact-card .cc-label { font-size: .75rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .1em; margin-bottom: .4rem; }
+  .contact-card .cc-val { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--white); }
+
+  .contact .btn-primary { position: relative; font-size: 1rem; padding: 1rem 2.5rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #08182e; padding: 2rem 5%;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  footer .logo { font-size: 1.3rem; }
+  footer p { font-size: .8rem; color: rgba(255,255,255,.35); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { transform: translateY(24px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .reveal { opacity: 0; transform: translateY(30px); transition: all .65s cubic-bezier(.16,1,.3,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 6rem; }
+    .hero-visual { order: -1; }
+    .services-grid, .why-grid, .testi-grid { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .steps::before { display: none; }
+    nav ul { display: none; }
+  }
+  @media (max-width: 600px) {
+    .services-grid, .why-grid, .testi-grid, .steps, .stats-bar { grid-template-columns: 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.12); }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    Realch<span>Q</span>
+    <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="13" cy="13" r="12" stroke="#1db954" stroke-width="2"/>
+      <polyline points="7,13 11,17 19,9" stroke="#1db954" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <ul>
+    <li><a href="#services">Our Services</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#contact" class="nav-cta">Book PDI</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">Pre-delivery Inspection Service</div>
+    <h1>RealchQ kiya toh<br><em>SAHI HAI</em> ✓</h1>
+    <p class="hero-tagline">Making sure your dream home is perfect before you move in. Comprehensive property inspections by certified experts — peace of mind, delivered.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">📋 Book Your PDI Now</a>
+      <a href="#services" class="btn-secondary">What We Check →</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="hero-badge"><span>✓</span>Certified</div>
+      <div class="hero-card-header">
+        <div class="logo-large">Realch<span>Q</span></div>
+        <p>Assured Quality · Peace of Mind</p>
+      </div>
+      <div class="checklist">
+        <div class="check-item"><div class="check-icon">⚡</div>Electrical Systems Check</div>
+        <div class="check-item"><div class="check-icon">🚿</div>Plumbing &amp; Fixtures</div>
+        <div class="check-item"><div class="check-icon">🪟</div>Doors &amp; Windows</div>
+        <div class="check-item"><div class="check-icon">🎨</div>Final Paint &amp; Finish</div>
+        <div class="check-item"><div class="check-icon">🏠</div>Flooring &amp; Tiling</div>
+        <div class="check-item"><div class="check-icon">🏆</div>Overall Quality Assurance</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">2000+</div>
+    <div class="stat-label">Homes Inspected</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">98%</div>
+    <div class="stat-label">Client Satisfaction</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">200+</div>
+    <div class="stat-label">Defects Caught</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-header reveal">
+    <div class="section-tag">What We Inspect</div>
+    <h2>Thorough. Systematic.<br>Uncompromising.</h2>
+    <p>Our expert inspectors go through every inch of your new home using professional-grade equipment and a structured checklist.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-icon">⚡</div>
+      <h3>Electrical Systems</h3>
+      <p>Complete check of wiring, switch boards, sockets, earthing, MCBs, and load testing of all circuits.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🚿</div>
+      <h3>Plumbing &amp; Fixtures</h3>
+      <p>Water pressure, drainage, pipe leaks, fixture alignment, and hot/cold water supply verification.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🪟</div>
+      <h3>Doors &amp; Windows</h3>
+      <p>Frame alignment, smooth operation, sealing, lock mechanisms, and hardware quality inspection.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🎨</div>
+      <h3>Final Paint &amp; Finish</h3>
+      <p>Surface uniformity, colour consistency, wall seepage detection, and finishing quality assessment.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🏠</div>
+      <h3>Flooring &amp; Tiling</h3>
+      <p>Hollow tile detection, grout quality, levelness, chip or crack checks, and finishing grade review.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">🏆</div>
+      <h3>Overall Quality Assurance</h3>
+      <p>A comprehensive audit with a detailed digital report, photo documentation, and remediation guidance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="process">
+  <div class="section-header reveal">
+    <div class="section-tag">How It Works</div>
+    <h2>Simple. Fast. Reliable.</h2>
+    <p>From booking to receiving your detailed report, we make the inspection process effortless.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <h4>Book Online</h4>
+      <p>Call or WhatsApp us to schedule your PDI at a time that suits you.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">2</div>
+      <h4>Site Visit</h4>
+      <p>Our certified inspector visits the property with professional equipment.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">3</div>
+      <h4>Inspection</h4>
+      <p>A thorough check of all systems and surfaces using our 100-point checklist.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">4</div>
+      <h4>Get Report</h4>
+      <p>Receive a detailed digital report with photos and actionable recommendations.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why" id="why">
+  <div class="section-header reveal">
+    <div class="section-tag">Why RealchQ</div>
+    <h2>Your Dream Home<br>Deserves the Best</h2>
+    <p>We bring professionalism, precision, and peace of mind to every inspection we conduct.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card reveal">
+      <div class="why-icon">🎯</div>
+      <h4>Certified Experts</h4>
+      <p>All inspectors are trained and certified professionals with deep knowledge of construction standards.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">📱</div>
+      <h4>Digital Reports</h4>
+      <p>Receive a comprehensive report on your phone within hours, with annotated photos of every finding.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">🛡️</div>
+      <h4>Builder Negotiations</h4>
+      <p>Our documented evidence helps you negotiate with builders to fix defects before possession.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">⏱️</div>
+      <h4>Quick Turnaround</h4>
+      <p>Inspection completed in 3–4 hours. Report delivered the same day, no delays.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">💰</div>
+      <h4>Save Money</h4>
+      <p>Identifying defects pre-possession saves you thousands in post-possession repairs and disputes.</p>
+    </div>
+    <div class="why-card reveal">
+      <div class="why-icon">📞</div>
+      <h4>Ongoing Support</h4>
+      <p>We're available after delivery to help you follow up with the builder and resolve any issues.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-header reveal">
+    <div class="section-tag">Happy Homeowners</div>
+    <h2>What Our Clients Say</h2>
+    <p>Don't take our word for it — here's what homeowners say after using RealchQ.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"RealchQ found 23 issues in my flat that I would never have noticed. The builder fixed all of them before possession. Worth every rupee!"</blockquote>
+      <div class="testi-author">Rahul Sharma</div>
+      <div class="testi-loc">Pune, Maharashtra</div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The detailed photo report was incredibly professional. The inspector was thorough and the whole process took just 3 hours. Highly recommended!"</blockquote>
+      <div class="testi-author">Priya &amp; Ankit Verma</div>
+      <div class="testi-loc">Mumbai, Maharashtra</div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"As a first-time homebuyer, I had no idea what to check. RealchQ gave me complete confidence before I took possession. Absolutely essential service!"</blockquote>
+      <div class="testi-author">Sneha Kulkarni</div>
+      <div class="testi-loc">Nashik, Maharashtra</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <h2>Book Your PDI <em>Today</em></h2>
+  <p>Don't sign on the dotted line until you're sure your home is perfect. Contact us now to schedule your inspection.</p>
+
+  <div class="contact-cards">
+    <div class="contact-card">
+      <div class="cc-label">📞 Call / WhatsApp</div>
+      <div class="cc-val">7588547988</div>
+    </div>
+    <div class="contact-card">
+      <div class="cc-label">📞 Call / WhatsApp</div>
+      <div class="cc-val">7020987546</div>
+    </div>
+  </div>
+
+  <a href="tel:7588547988" class="btn-primary">📋 Book Your PDI Now</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo" style="color:#fff;">
+    Realch<span>Q</span>
+    <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="13" cy="13" r="12" stroke="#1db954" stroke-width="2"/>
+      <polyline points="7,13 11,17 19,9" stroke="#1db954" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <p>© 2026 RealchQ. Making sure your dream home is perfect.</p>
+  <p style="color:rgba(255,255,255,.35);font-size:.8rem;">Pre-delivery Inspection Service · Maharashtra</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  els.forEach(el => io.observe(el));
+
+  // Stagger children in grids
+  document.querySelectorAll('.services-grid, .why-grid, .testi-grid, .steps').forEach(grid => {
+    [...grid.children].forEach((child, i) => { child.style.transitionDelay = `${i * 0.1}s`; });
+  });
+</script>
+</body>
+</html>
