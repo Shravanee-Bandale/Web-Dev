@@ -1,47 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Appointment Booking System</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointment Booking System</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  margin: 0;
+}
+header {
+  background: #4CAF50;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+.container {
+  max-width: 600px;
+  margin: 30px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+button:hover {
+  background: #45a049;
+}
+.appointment-list {
+  margin-top: 20px;
+}
+.appointment {
+  background: #e8f5e9;
+  padding: 10px;
+  margin: 10px 0;
+  border-left: 5px solid #4CAF50;
+}
+.notification {
+  background: #ff9800;
+  color: white;
+  padding: 10px;
+  display: none;
+  text-align: center;
+}
+</style>
 </head>
 <body>
 
+<header>
+<h2>Appointment Booking System</h2>
+</header>
+
+<div class="notification" id="notification"></div>
+
 <div class="container">
+<h3>Book Appointment</h3>
+<input type="text" id="name" placeholder="Your Name" required>
+<input type="email" id="email" placeholder="Email" required>
+<input type="date" id="date" required>
+<input type="time" id="time" required>
+<select id="service">
+  <option value="Consultation">Consultation</option>
+  <option value="Checkup">Checkup</option>
+  <option value="Emergency">Emergency</option>
+</select>
+<button onclick="bookAppointment()">Book Appointment</button>
 
-  <h1>Appointment Booking</h1>
-
-  <!-- Login/Register -->
-  <div id="auth">
-    <input type="text" id="username" placeholder="Enter your name">
-    <button onclick="login()">Login</button>
-  </div>
-
-  <!-- Main App -->
-  <div id="app" class="hidden">
-
-    <h2 id="welcome"></h2>
-
-    <!-- Slot Selection -->
-    <h3>Select Date</h3>
-    <input type="date" id="date">
-
-    <h3>Select Time Slot</h3>
-    <div id="slots"></div>
-
-    <button onclick="bookAppointment()">Book Appointment</button>
-
-    <!-- Appointments -->
-    <h3>Your Appointments</h3>
-    <ul id="appointments"></ul>
-
-  </div>
-
-  <!-- Notification -->
-  <div id="notification"></div>
-
+<div class="appointment-list" id="appointments"></div>
 </div>
 
-<script src="script.js"></script>
+<script>
+let appointments = JSON.parse(localStorage.getItem("appointments")) || [];
+
+function showNotification(message) {
+  const notification = document.getElementById("notification");
+  notification.innerText = message;
+  notification.style.display = "block";
+  setTimeout(() => {
+    notification.style.display = "none";
+  }, 3000);
+}
+
+function renderAppointments() {
+  const container = document.getElementById("appointments");
+  container.innerHTML = "";
+
+  appointments.forEach((appt, index) => {
+    const div = document.createElement("div");
+    div.className = "appointment";
+    div.innerHTML = `
+      <strong>${appt.name}</strong><br>
+      ${appt.service} on ${appt.date} at ${appt.time}<br>
+      <button onclick="deleteAppointment(${index})">Cancel</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function bookAppointment() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
+  const service = document.getElementById("service").value;
+
+  if (!name || !email || !date || !time) {
+    showNotification("Please fill all fields");
+    return;
+  }
+
+  const newAppointment = { name, email, date, time, service };
+  appointments.push(newAppointment);
+  localStorage.setItem("appointments", JSON.stringify(appointments));
+
+  showNotification("Appointment Booked Successfully!");
+  renderAppointments();
+}
+
+function deleteAppointment(index) {
+  appointments.splice(index, 1);
+  localStorage.setItem("appointments", JSON.stringify(appointments));
+  showNotification("Appointment Cancelled");
+  renderAppointments();
+}
+
+// Reminder Notification Check
+setInterval(() => {
+  const now = new Date();
+  appointments.forEach(appt => {
+    const apptTime = new Date(`${appt.date}T${appt.time}`);
+    const diff = (apptTime - now) / 60000;
+
+    if (diff > 0 && diff < 1) {
+      showNotification(`Reminder: Appointment for ${appt.name} in 1 minute`);
+    }
+  });
+}, 30000);
+
+renderAppointments();
+</script>
+
 </body>
 </html>
