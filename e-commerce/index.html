@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ApplianceHub</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary:   #ffffff;
+      --bg-secondary: #f3f3f3;
+      --bg-tertiary:  #e8e8e8;
+      --bg-info:      #e6f1fb;
+      --bg-success:   #eaf3de;
+      --bg-warning:   #faeeda;
+      --bg-danger:    #fcebeb;
+
+      --text-primary:   #1a1a1a;
+      --text-secondary: #666666;
+      --text-tertiary:  #999999;
+      --text-info:      #185fa5;
+      --text-success:   #3b6d11;
+      --text-warning:   #854f0b;
+      --text-danger:    #a32d2d;
+
+      --border-subtle:   rgba(0,0,0,0.12);
+      --border-medium:   rgba(0,0,0,0.22);
+      --border-strong:   rgba(0,0,0,0.35);
+      --border-success:  rgba(59,109,17,0.4);
+      --border-warning:  rgba(133,79,11,0.4);
+      --border-danger:   rgba(163,45,45,0.4);
+
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary:   #1e1e1e;
+        --bg-secondary: #2a2a2a;
+        --bg-tertiary:  #111111;
+        --bg-info:      #042c53;
+        --bg-success:   #173404;
+        --bg-warning:   #412402;
+        --bg-danger:    #501313;
+
+        --text-primary:   #e8e8e8;
+        --text-secondary: #aaaaaa;
+        --text-tertiary:  #555555;
+        --text-info:      #85b7eb;
+        --text-success:   #97c459;
+        --text-warning:   #ef9f27;
+        --text-danger:    #f09595;
+
+        --border-subtle:  rgba(255,255,255,0.10);
+        --border-medium:  rgba(255,255,255,0.20);
+        --border-strong:  rgba(255,255,255,0.35);
+        --border-success: rgba(151,196,89,0.35);
+        --border-warning: rgba(239,159,39,0.35);
+        --border-danger:  rgba(240,149,149,0.35);
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    button { font-family: inherit; cursor: pointer; }
+    input, select { font-family: inherit; outline: none; }
+    input:focus, select:focus { border-color: var(--border-strong) !important; }
+    * { scrollbar-width: thin; scrollbar-color: var(--border-medium) transparent; }
+
+    /* ── Reusable classes ── */
+    .card {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+    }
+
+    .pill-btn {
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border-medium);
+      background: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      transition: background 0.12s, color 0.12s;
+    }
+    .pill-btn.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      font-weight: 500;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 9px 0;
+      border-radius: var(--radius-md);
+      border: none;
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .ghost-btn {
+      width: 100%;
+      padding: 7px 0;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-subtle);
+      background: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-medium);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* ── Layout ── */
+    #root { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .header {
+      background: var(--bg-primary);
+      border-bottom: 0.5px solid var(--border-subtle);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo { font-weight: 500; font-size: 16px; white-space: nowrap; }
+
+    .main-body {
+      flex: 1;
+      display: flex;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px 16px;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    /* ── Product grid ── */
+    .product-section { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .filter-row input {
+      flex: 1; min-width: 150px;
+      padding: 7px 12px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-medium);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+    .filter-row select {
+      padding: 7px 10px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-medium);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .category-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 12px;
+    }
+
+    .product-card {
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .product-card:hover { border-color: var(--border-medium); }
+
+    .product-emoji { font-size: 36px; text-align: center; padding: 8px 0; }
+    .product-name { font-weight: 500; font-size: 14px; line-height: 1.3; }
+    .product-brand { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+    .product-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+    .product-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+    .product-price { font-weight: 500; font-size: 16px; }
+
+    .add-btn {
+      width: 100%;
+      padding: 7px 0;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 4px;
+      transition: background 0.12s;
+    }
+    .add-btn.default {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border: 0.5px solid var(--border-medium);
+    }
+    .add-btn.added {
+      background: var(--bg-success);
+      color: var(--text-success);
+      border: 0.5px solid var(--border-success);
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 72px;
+      background: var(--bg-primary);
+      border: 0.5px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      max-height: calc(100vh - 90px);
+      overflow-y: auto;
+    }
+
+    .sidebar-title { font-weight: 500; font-size: 14px; margin-bottom: 12px; }
+
+    /* ── Cart ── */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--border-subtle);
+    }
+    .cart-item-emoji { font-size: 22px; }
+    .cart-item-info { flex: 1; min-width: 0; }
+    .cart-item-name { font-size: 12px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cart-item-price { font-size: 11px; color: var(--text-secondary); }
+
+    .qty-controls { display: flex; align-items: center; gap: 4px; }
+    .qty-btn {
+      width: 24px; height: 24px;
+      border: 0.5px solid var(--border-medium);
+      border-radius: 4px;
+      background: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qty-value { font-size: 13px; font-weight: 500; min-width: 20px; text-align: center; }
+
+    .cart-item-total { text-align: right; min-width: 52px; }
+    .cart-item-total-val { font-size: 12px; font-weight: 500; }
+    .remove-btn { background: none; border: none; font-size: 11px; color: var(--text-danger); padding: 0; }
+
+    .cart-totals { padding-top: 12px; border-top: 0.5px solid var(--border-subtle); margin-top: 4px; }
+    .shipping-note { font-size: 11px; margin-bottom: 6px; }
+    .totals-grid { display: grid; grid-template-columns: 1fr auto; gap: 2px 0; font-size: 12px; color: var(--text-secondary); }
+    .totals-grid span:nth-child(even) { text-align: right; }
+    .grand-total { display: flex; justify-content: space-between; font-weight: 500; font-size: 15px; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border-subtle); }
+    .cart-error { font-size: 11px; color: var(--text-danger); margin-top: 6px; }
+
+    /* ── Checkout ── */
+    .checkout-section-title { font-weight: 500; font-size: 14px; margin: 4px 0; }
+    .checkout-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .payment-options { display: flex; gap: 8px; }
+    .payment-btn {
+      flex: 1; padding: 7px 0;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: var(--text-primary);
+      background: none;
+      border: 0.5px solid var(--border-subtle);
+    }
+    .payment-btn.selected { border: 2px solid var(--text-primary); background: var(--bg-secondary); font-weight: 500; }
+
+    .order-summary-box {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+    .order-summary-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 2px; }
+    .order-summary-total { display: flex; justify-content: space-between; font-weight: 500; font-size: 15px; margin-top: 6px; padding-top: 6px; border-top: 0.5px solid var(--border-subtle); }
+
+    /* ── Confirmation ── */
+    .confirm-wrap { text-align: center; padding: 1rem 0; }
+    .confirm-icon { font-size: 44px; margin-bottom: 8px; }
+    .confirm-id { font-size: 12px; color: var(--text-secondary); margin: 4px 0 16px; }
+    .confirm-items-box { background: var(--bg-secondary); border-radius: var(--radius-lg); padding: 12px 14px; text-align: left; }
+    .confirm-item-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 3px; }
+    .confirm-total-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border-subtle); }
+    .delivery-note { background: var(--bg-info); border-radius: var(--radius-md); padding: 8px 12px; font-size: 12px; color: var(--text-info); margin-top: 12px; }
+    .email-note { font-size: 11px; color: var(--text-secondary); margin: 10px 0 0; }
+
+    /* ── Admin ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+    .kpi-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 10px 14px; }
+    .kpi-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 2px; }
+    .kpi-value { font-size: 20px; font-weight: 500; }
+
+    .order-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border-subtle); font-size: 12px; }
+    .order-id { font-weight: 500; }
+    .order-meta { color: var(--text-secondary); }
+
+    .inv-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; }
+
+    /* ── Empty cart ── */
+    .empty-cart { text-align: center; padding: 3rem 1rem; color: var(--text-tertiary); }
+    .empty-cart-icon { font-size: 40px; margin-bottom: 8px; }
+
+    /* ── Admin page wrapper ── */
+    .admin-page { flex: 1; background: var(--bg-primary); border: 0.5px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 16px 20px; }
+    .admin-section-title { font-weight: 500; font-size: 14px; margin: 0 0 10px; }
+
+    .back-link { background: none; border: none; font-size: 12px; color: var(--text-secondary); padding: 0; margin-bottom: 4px; }
+
+    .stars { color: #e8a217; font-size: 12px; }
+    .star-count { color: var(--text-secondary); font-size: 11px; }
+    .result-count { font-size: 12px; color: var(--text-secondary); }
+    .section-gap { display: flex; flex-direction: column; gap: 12px; }
+    .no-results { color: var(--text-tertiary); font-size: 13px; padding: 2rem 0; grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useReducer, useCallback, useMemo } = React;
+
+// ════════════════════════════════════════════════════════════
+//  DATA LAYER
+// ════════════════════════════════════════════════════════════
+
+const CATALOG = {
+  categories: ["All", "Kitchen", "Laundry", "Climate", "Accessories"],
+  products: [
+    { id:"P001", name:"ProChef Induction Cooktop",    category:"Kitchen",     price:349.99,  stock:12, brand:"ThermoTech",  rating:4.7, image:"🍳", desc:"9-zone precision induction with smart sensor technology" },
+    { id:"P002", name:"AquaCool Refrigerator 650L",   category:"Kitchen",     price:1299.99, stock:5,  brand:"AquaCool",    rating:4.8, image:"🧊", desc:"French door, inverter compressor, smart humidity control" },
+    { id:"P003", name:"VortexClean Dishwasher",        category:"Kitchen",     price:589.99,  stock:8,  brand:"VortexClean", rating:4.5, image:"🫧", desc:"15-place setting, 7 wash programs, 44dB silent operation" },
+    { id:"P004", name:"AeroFresh Microwave 30L",       category:"Kitchen",     price:179.99,  stock:20, brand:"AeroFresh",   rating:4.3, image:"📡", desc:"Convection + grill combo, touch controls, auto-defrost" },
+    { id:"P005", name:"CleanWave Washing Machine",     category:"Laundry",     price:649.99,  stock:7,  brand:"CleanWave",   rating:4.6, image:"🌀", desc:"10kg, 1400 RPM, AI fabric care, steam hygiene cycle" },
+    { id:"P006", name:"SilkDry Tumble Dryer",          category:"Laundry",     price:499.99,  stock:9,  brand:"CleanWave",   rating:4.4, image:"💨", desc:"8kg heat-pump dryer, sensor drying, 65% energy saving" },
+    { id:"P007", name:"ArcticBreeze Split AC 1.5T",   category:"Climate",     price:849.99,  stock:4,  brand:"ArcticBreeze",rating:4.9, image:"❄️", desc:"5-star rated, WiFi control, PM2.5 filter, turbo cool" },
+    { id:"P008", name:"PureAir HEPA Purifier",         category:"Climate",     price:299.99,  stock:15, brand:"PureAir",     rating:4.7, image:"🌬️", desc:"True HEPA H13, covers 600 sq ft, air quality display" },
+    { id:"P009", name:"SmartHub Universal Remote",     category:"Accessories", price:49.99,   stock:30, brand:"SmartHub",    rating:4.2, image:"📱", desc:"Controls 15 appliances, voice-enabled, backlit display" },
+    { id:"P010", name:"PowerGuard Surge Protector",    category:"Accessories", price:34.99,   stock:50, brand:"PowerGuard",  rating:4.5, image:"⚡", desc:"8-outlet, 4320J protection, USB-A & USB-C charging" },
+    { id:"P011", name:"FlexMount Universal Bracket",   category:"Accessories", price:24.99,   stock:40, brand:"FlexMount",   rating:4.1, image:"🔧", desc:"Fits most appliances, VESA compatible, max 50kg load" },
+    { id:"P012", name:"CleanWave Washer-Dryer Combo",  category:"Laundry",     price:999.99,  stock:3,  brand:"CleanWave",   rating:4.6, image:"🔄", desc:"8kg wash / 5kg dry, all-in-one, direct drive motor" },
+  ],
+};
+
+const TAX_RATE          = 0.08;
+const SHIPPING_THRESHOLD = 500;
+const SHIPPING_COST      = 49.99;
+
+// ════════════════════════════════════════════════════════════
+//  BACKEND ENGINE
+// ════════════════════════════════════════════════════════════
+
+const cartReducer = (state, action) => {
+  switch (action.type) {
+
+    case "ADD_ITEM": {
+      const product  = CATALOG.products.find(p => p.id === action.id);
+      if (!product) return state;
+      const existing = state.items.find(i => i.productId === action.id);
+      if (existing) {
+        if (existing.qty >= product.stock)
+          return { ...state, lastError: `Only ${product.stock} in stock` };
+        return { ...state, lastError: null,
+          items: state.items.map(i => i.productId === action.id ? { ...i, qty: i.qty + 1 } : i) };
+      }
+      return { ...state, lastError: null,
+        items: [...state.items, { productId: product.id, name: product.name, price: product.price, qty: 1, image: product.image }] };
+    }
+
+    case "REMOVE_ITEM":
+      return { ...state, items: state.items.filter(i => i.productId !== action.id) };
+
+    case "UPDATE_QTY": {
+      const product = CATALOG.products.find(p => p.id === action.id);
+      if (action.qty < 1) return { ...state, items: state.items.filter(i => i.productId !== action.id) };
+      if (product && action.qty > product.stock)
+        return { ...state, lastError: `Max stock: ${product.stock}` };
+      return { ...state, lastError: null,
+        items: state.items.map(i => i.productId === action.id ? { ...i, qty: action.qty } : i) };
+    }
+
+    case "CLEAR_CART":
+      return { items: [], lastError: null };
+
+    default: return state;
+  }
+};
+
+const orderEngine = {
+  computeCart(items) {
+    const subtotal  = items.reduce((s, i) => s + i.price * i.qty, 0);
+    const shipping  = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+    const tax       = subtotal * TAX_RATE;
+    const total     = subtotal + shipping + tax;
+    const itemCount = items.reduce((s, i) => s + i.qty, 0);
+    return { subtotal, shipping, tax, total, itemCount };
+  },
+
+  placeOrder(cart, customer) {
+    if (cart.items.length === 0) return { success: false, error: "Cart is empty" };
+    if (!customer.name || !customer.email || !customer.address)
+      return { success: false, error: "Please fill all required fields" };
+    const summary = orderEngine.computeCart(cart.items);
+    return {
+      success: true,
+      order: {
+        id: `ORD-${Date.now().toString(36).toUpperCase()}`,
+        timestamp: new Date().toISOString(),
+        customer, items: cart.items, ...summary,
+        status: "confirmed",
+        eta: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      },
+    };
+  },
+};
+
+// ════════════════════════════════════════════════════════════
+//  HELPERS & TINY COMPONENTS
+// ════════════════════════════════════════════════════════════
+
+const fmt = n => `$${n.toFixed(2)}`;
+
+const Badge = ({ children, color = "info" }) => (
+  <span className="badge" style={{
+    background: `var(--bg-${color})`,
+    color: `var(--text-${color})`,
+  }}>{children}</span>
+);
+
+const Stars = ({ rating }) => {
+  const full = Math.floor(rating);
+  return (
+    <span className="stars">
+      {"★".repeat(full)}{"☆".repeat(5 - full)}{" "}
+      <span className="star-count">{rating}</span>
+    </span>
+  );
+};
+
+// ════════════════════════════════════════════════════════════
+//  PRODUCT CARD
+// ════════════════════════════════════════════════════════════
+
+const ProductCard = ({ product, onAdd, inCart }) => (
+  <div className="product-card">
+    <div className="product-emoji">{product.image}</div>
+    <div>
+      <div className="product-name">{product.name}</div>
+      <div className="product-brand">{product.brand}</div>
+    </div>
+    <Stars rating={product.rating} />
+    <div className="product-desc">{product.desc}</div>
+    <div className="product-footer">
+      <span className="product-price">{fmt(product.price)}</span>
+      <Badge color={product.stock > 5 ? "success" : "warning"}>
+        {product.stock > 5 ? "In stock" : `${product.stock} left`}
+      </Badge>
+    </div>
+    <button
+      className={`add-btn ${inCart ? "added" : "default"}`}
+      onClick={() => onAdd(product.id)}
+    >
+      {inCart ? "✓ Added" : "+ Add to Cart"}
+    </button>
+  </div>
+);
+
+// ════════════════════════════════════════════════════════════
+//  CART PANEL
+// ════════════════════════════════════════════════════════════
+
+const CartPanel = ({ cart, dispatch, summary, onCheckout }) => (
+  <div>
+    {cart.items.length === 0 ? (
+      <div className="empty-cart">
+        <div className="empty-cart-icon">🛒</div>
+        <p style={{ fontSize: 13 }}>Your cart is empty</p>
+      </div>
+    ) : (
+      <>
+        {cart.items.map(item => (
+          <div className="cart-item" key={item.productId}>
+            <span className="cart-item-emoji">{item.image}</span>
+            <div className="cart-item-info">
+              <div className="cart-item-name">{item.name}</div>
+              <div className="cart-item-price">{fmt(item.price)} each</div>
+            </div>
+            <div className="qty-controls">
+              <button className="qty-btn" onClick={() => dispatch({ type:"UPDATE_QTY", id:item.productId, qty:item.qty - 1 })}>−</button>
+              <span className="qty-value">{item.qty}</span>
+              <button className="qty-btn" onClick={() => dispatch({ type:"UPDATE_QTY", id:item.productId, qty:item.qty + 1 })}>+</button>
+            </div>
+            <div className="cart-item-total">
+              <div className="cart-item-total-val">{fmt(item.price * item.qty)}</div>
+              <button className="remove-btn" onClick={() => dispatch({ type:"REMOVE_ITEM", id:item.productId })}>remove</button>
+            </div>
+          </div>
+        ))}
+
+        <div className="cart-totals">
+          {summary.shipping === 0
+            ? <p className="shipping-note" style={{ color:"var(--text-success)" }}>✓ Free shipping applied</p>
+            : <p className="shipping-note" style={{ color:"var(--text-secondary)" }}>Add {fmt(SHIPPING_THRESHOLD - summary.subtotal)} more for free shipping</p>
+          }
+          <div className="totals-grid">
+            <span>Subtotal</span><span>{fmt(summary.subtotal)}</span>
+            <span>Shipping</span><span>{summary.shipping === 0 ? "Free" : fmt(summary.shipping)}</span>
+            <span>Tax (8%)</span><span>{fmt(summary.tax)}</span>
+          </div>
+          <div className="grand-total">
+            <span>Total</span><span>{fmt(summary.total)}</span>
+          </div>
+          {cart.lastError && <p className="cart-error">{cart.lastError}</p>}
+          <button className="primary-btn" style={{ marginTop: 10 }} onClick={onCheckout}>Checkout →</button>
+          <button className="ghost-btn" style={{ marginTop: 6 }} onClick={() => dispatch({ type:"CLEAR_CART" })}>Clear cart</button>
+        </div>
+      </>
+    )}
+  </div>
+);
+
+// ════════════════════════════════════════════════════════════
+//  CHECKOUT PANEL
+// ════════════════════════════════════════════════════════════
+
+const CheckoutPanel = ({ cart, summary, onBack, onConfirm }) => {
+  const [form, setForm] = useState({ name:"", email:"", address:"", city:"", zip:"", payment:"card" });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  return (
+    <div className="section-gap">
+      <button className="back-link" onClick={onBack}>← Back to cart</button>
+
+      <div className="checkout-section-title">Customer details</div>
+      <input className="form-input" placeholder="Full name *"        value={form.name}    onChange={e => set("name", e.target.value)} />
+      <input className="form-input" placeholder="Email address *"    value={form.email}   onChange={e => set("email", e.target.value)} />
+      <input className="form-input" placeholder="Delivery address *" value={form.address} onChange={e => set("address", e.target.value)} />
+      <div className="checkout-grid-2">
+        <input className="form-input" placeholder="City"     value={form.city} onChange={e => set("city", e.target.value)} />
+        <input className="form-input" placeholder="ZIP code" value={form.zip}  onChange={e => set("zip", e.target.value)} />
+      </div>
+
+      <div className="checkout-section-title" style={{ marginTop: 4 }}>Payment method</div>
+      <div className="payment-options">
+        {[["card","💳 Card"],["paypal","🅿️ PayPal"],["bank","🏦 Bank"]].map(([m, label]) => (
+          <button key={m} className={`payment-btn ${form.payment === m ? "selected" : ""}`} onClick={() => set("payment", m)}>{label}</button>
+        ))}
+      </div>
+
+      <div className="order-summary-box">
+        <div className="order-summary-row">
+          <span>{summary.itemCount} item{summary.itemCount > 1 ? "s" : ""}</span>
+          <span>{fmt(summary.subtotal)}</span>
+        </div>
+        <div className="order-summary-row">
+          <span>Shipping + Tax</span>
+          <span>{fmt(summary.shipping + summary.tax)}</span>
+        </div>
+        <div className="order-summary-total">
+          <span>Total due</span><span>{fmt(summary.total)}</span>
+        </div>
+      </div>
+
+      <button className="primary-btn" onClick={() => onConfirm(form)}>Place Order →</button>
+    </div>
+  );
+};
+
+// ════════════════════════════════════════════════════════════
+//  ORDER CONFIRMATION
+// ════════════════════════════════════════════════════════════
+
+const OrderConfirmation = ({ order, onNew }) => (
+  <div className="confirm-wrap">
+    <div className="confirm-icon">✅</div>
+    <p style={{ fontWeight:500, fontSize:16 }}>Order confirmed!</p>
+    <p className="confirm-id">Confirmation ID: <strong>{order.id}</strong></p>
+
+    <div className="confirm-items-box">
+      <p style={{ fontSize:12, fontWeight:500, marginBottom:8 }}>Order summary</p>
+      {order.items.map(i => (
+        <div key={i.productId} className="confirm-item-row">
+          <span>{i.image} {i.name} ×{i.qty}</span>
+          <span>{fmt(i.price * i.qty)}</span>
+        </div>
+      ))}
+      <div className="confirm-total-row">
+        <span>Total paid</span><span>{fmt(order.total)}</span>
+      </div>
+    </div>
+
+    <div className="delivery-note">📦 Estimated delivery: <strong>{order.eta}</strong></div>
+    <p className="email-note">Confirmation sent to {order.customer.email}</p>
+
+    <button onClick={onNew}
+      style={{ marginTop:14, padding:"8px 20px", borderRadius:"var(--radius-md)", border:"0.5px solid var(--border-medium)", background:"none", color:"var(--text-primary)", fontSize:13 }}>
+      Continue shopping
+    </button>
+  </div>
+);
+
+// ════════════════════════════════════════════════════════════
+//  ADMIN PANEL
+// ════════════════════════════════════════════════════════════
+
+const AdminPanel = ({ orders }) => {
+  const revenue  = orders.reduce((s, o) => s + o.total, 0);
+  const lowStock = CATALOG.products.filter(p => p.stock <= 5);
+
+  return (
+    <div style={{ display:"flex", flexDirection:"column", gap:20 }}>
+      <div className="kpi-grid">
+        {[["Total orders", orders.length], ["Revenue", fmt(revenue)], ["Products", CATALOG.products.length], ["Low stock", lowStock.length]]
+          .map(([label, value]) => (
+            <div key={label} className="kpi-card">
+              <div className="kpi-label">{label}</div>
+              <div className="kpi-value">{value}</div>
+            </div>
+          ))}
+      </div>
+
+      <div>
+        <p className="admin-section-title">Recent orders</p>
+        {orders.length === 0
+          ? <p style={{ fontSize:12, color:"var(--text-tertiary)" }}>No orders yet — place one to see it here.</p>
+          : [...orders].reverse().slice(0, 5).map(o => (
+            <div key={o.id} className="order-row">
+              <div>
+                <div className="order-id">{o.id}</div>
+                <div className="order-meta">{o.customer.name} · {o.itemCount} item{o.itemCount > 1 ? "s" : ""}</div>
+              </div>
+              <div style={{ textAlign:"right" }}>
+                <div style={{ fontWeight:500, marginBottom:4 }}>{fmt(o.total)}</div>
+                <Badge color="success">confirmed</Badge>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div>
+        <p className="admin-section-title">Inventory alerts</p>
+        {lowStock.length === 0
+          ? <p style={{ fontSize:12, color:"var(--text-success)" }}>✓ All products well-stocked</p>
+          : lowStock.map(p => (
+            <div key={p.id} className="inv-row">
+              <span>{p.image} {p.name}</span>
+              <Badge color={p.stock <= 3 ? "danger" : "warning"}>{p.stock} left</Badge>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  );
+};
+
+// ════════════════════════════════════════════════════════════
+//  ROOT APP
+// ════════════════════════════════════════════════════════════
+
+const App = () => {
+  const [cart, dispatch]    = useReducer(cartReducer, { items:[], lastError:null });
+  const [category, setCategory] = useState("All");
+  const [search, setSearch]     = useState("");
+  const [sortBy, setSortBy]     = useState("default");
+  const [panel, setPanel]       = useState("cart");   // cart | checkout | confirm
+  const [confirmed, setConfirmed] = useState(null);
+  const [orders, setOrders]     = useState([]);
+  const [tab, setTab]           = useState("shop");   // shop | admin
+
+  const summary = useMemo(() => orderEngine.computeCart(cart.items), [cart.items]);
+
+  const products = useMemo(() => {
+    let list = CATALOG.products.filter(p =>
+      (category === "All" || p.category === category) &&
+      (search === "" || p.name.toLowerCase().includes(search.toLowerCase()) || p.brand.toLowerCase().includes(search.toLowerCase()))
+    );
+    if (sortBy === "price-asc")  list = [...list].sort((a,b) => a.price - b.price);
+    if (sortBy === "price-desc") list = [...list].sort((a,b) => b.price - a.price);
+    if (sortBy === "rating")     list = [...list].sort((a,b) => b.rating - a.rating);
+    return list;
+  }, [category, search, sortBy]);
+
+  const handleAdd = useCallback(id => dispatch({ type:"ADD_ITEM", id }), []);
+
+  const handleConfirm = useCallback(form => {
+    const result = orderEngine.placeOrder(cart, form);
+    if (result.success) {
+      setOrders(prev => [...prev, result.order]);
+      setConfirmed(result.order);
+      dispatch({ type:"CLEAR_CART" });
+      setPanel("confirm");
+    }
+  }, [cart]);
+
+  const cartCount = summary.itemCount;
+
+  const panelTitle =
+    panel === "cart"     ? `Cart${cartCount > 0 ? ` (${cartCount})` : ""}` :
+    panel === "checkout" ? "Checkout" : "Order placed";
+
+  return (
+    <>
+      {/* ── Header ── */}
+      <header className="header">
+        <div className="logo">⚡ ApplianceHub</div>
+        <nav style={{ display:"flex", gap:8 }}>
+          {["shop","admin"].map(t => (
+            <button key={t} className={`pill-btn ${tab === t ? "active" : ""}`} onClick={() => setTab(t)}>
+              {t === "shop" ? "Shop" : `Admin${orders.length > 0 ? ` (${orders.length})` : ""}`}
+            </button>
+          ))}
+        </nav>
+        <div style={{ flex:1 }} />
+        {cartCount > 0 &&
+          <span style={{ background:"var(--text-primary)", color:"var(--bg-primary)", borderRadius:20, padding:"2px 10px", fontWeight:500, fontSize:13 }}>
+            🛒 {cartCount}
+          </span>
+        }
+      </header>
+
+      {/* ── Body ── */}
+      <div className="main-body">
+        {tab === "shop" ? (
+          <>
+            {/* Product section */}
+            <section className="product-section">
+              <div className="filter-row">
+                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search products..." />
+                <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                  <option value="default">Sort: Default</option>
+                  <option value="price-asc">Price: Low → High</option>
+                  <option value="price-desc">Price: High → Low</option>
+                  <option value="rating">Top rated</option>
+                </select>
+              </div>
+
+              <div className="category-row">
+                {CATALOG.categories.map(cat => (
+                  <button key={cat} className={`pill-btn ${category === cat ? "active" : ""}`} onClick={() => setCategory(cat)}>{cat}</button>
+                ))}
+              </div>
+
+              <p className="result-count">{products.length} product{products.length !== 1 ? "s" : ""}</p>
+
+              <div className="product-grid">
+                {products.map(p => (
+                  <ProductCard key={p.id} product={p} onAdd={handleAdd} inCart={cart.items.some(i => i.productId === p.id)} />
+                ))}
+                {products.length === 0 && <p className="no-results">No products match your search.</p>}
+              </div>
+            </section>
+
+            {/* Sidebar */}
+            <aside className="sidebar">
+              <p className="sidebar-title">{panelTitle}</p>
+              {panel === "cart" && <CartPanel cart={cart} dispatch={dispatch} summary={summary} onCheckout={() => setPanel("checkout")} />}
+              {panel === "checkout" && <CheckoutPanel cart={cart} summary={summary} onBack={() => setPanel("cart")} onConfirm={handleConfirm} />}
+              {panel === "confirm" && confirmed && <OrderConfirmation order={confirmed} onNew={() => { setPanel("cart"); setConfirmed(null); }} />}
+            </aside>
+          </>
+        ) : (
+          <div className="admin-page">
+            <p style={{ fontWeight:500, fontSize:15, marginBottom:16 }}>Admin dashboard</p>
+            <AdminPanel orders={orders} />
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
