@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ember & Oak — Coffee House</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">Ember <span>&</span> Oak</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-cta">Order Now</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#menu" class="mobile-link">Menu</a></li>
+      <li><a href="#gallery" class="mobile-link">Gallery</a></li>
+      <li><a href="#contact" class="mobile-link">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="grain"></div>
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal">Est. 2018 · Downtown</p>
+      <h1 class="hero-title reveal">
+        Where Every<br><em>Cup Tells</em><br>a Story
+      </h1>
+      <p class="hero-sub reveal">Specialty coffee, slow mornings,<br>and a space to breathe.</p>
+      <div class="hero-actions reveal">
+        <a href="#menu" class="btn-primary">Explore Menu</a>
+        <a href="#about" class="btn-ghost">Our Story</a>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <svg viewBox="0 0 120 120">
+        <path id="circlePath" d="M 60,60 m -45,0 a 45,45 0 1,1 90,0 a 45,45 0 1,1 -90,0"/>
+        <text><textPath href="#circlePath">SPECIALTY COFFEE · ARTISAN ROAST · SINCE 2018 · </textPath></text>
+      </svg>
+      <div class="badge-icon">☕</div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-visual">
+      <div class="about-card card-a">
+        <div class="card-inner">
+          <div class="card-icon">🌱</div>
+          <p>Direct Trade</p>
+        </div>
+      </div>
+      <div class="about-card card-b">
+        <div class="card-inner">
+          <div class="card-icon">🔥</div>
+          <p>In-House Roast</p>
+        </div>
+      </div>
+      <div class="about-card card-c">
+        <div class="card-inner">
+          <div class="card-icon">♥</div>
+          <p>Made with Love</p>
+        </div>
+      </div>
+      <div class="about-circle">
+        <p>100%<br><span>Arabica</span></p>
+      </div>
+    </div>
+    <div class="about-text">
+      <span class="section-tag">Our Story</span>
+      <h2 class="section-title">Rooted in craft,<br><em>steeped in warmth</em></h2>
+      <p>Ember & Oak was born from a single obsession: the perfect cup. We source our beans directly from small farms in Ethiopia, Colombia, and Guatemala — forging relationships that span seasons and continents.</p>
+      <p>Every roast is done in-house, every espresso pulled by hand. Come as you are. Stay as long as you like.</p>
+      <div class="about-stats">
+        <div class="stat"><strong>6+</strong><span>Origins</span></div>
+        <div class="stat"><strong>12K+</strong><span>Happy Guests</span></div>
+        <div class="stat"><strong>3</strong><span>Locations</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu-section" id="menu">
+    <div class="menu-header">
+      <span class="section-tag light">Our Menu</span>
+      <h2 class="section-title light">Crafted for<br><em>every craving</em></h2>
+    </div>
+    <div class="menu-tabs">
+      <button class="tab active" data-tab="coffee">Coffee</button>
+      <button class="tab" data-tab="tea">Tea & More</button>
+      <button class="tab" data-tab="food">Food</button>
+    </div>
+    <div class="menu-grid" id="menuGrid"></div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery" id="gallery">
+    <div class="gallery-header">
+      <span class="section-tag">Atmosphere</span>
+      <h2 class="section-title">A place to<br><em>call yours</em></h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="g-item g1"><div class="g-label">Morning Light</div></div>
+      <div class="g-item g2"><div class="g-label">The Bar</div></div>
+      <div class="g-item g3"><div class="g-label">Latte Art</div></div>
+      <div class="g-item g4"><div class="g-label">Our Beans</div></div>
+      <div class="g-item g5"><div class="g-label">The Corner</div></div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="testi-track" id="testiTrack">
+      <div class="testi-card">
+        <p>"The best flat white I've had outside of Melbourne. Ember & Oak is on another level."</p>
+        <cite>— Sarah K., Regular</cite>
+      </div>
+      <div class="testi-card">
+        <p>"I work here three times a week. The vibe, the coffee, the staff — all perfect."</p>
+        <cite>— Marcus T., Freelancer</cite>
+      </div>
+      <div class="testi-card">
+        <p>"Their single-origin Ethiopian pour-over is transcendent. Worth every penny."</p>
+        <cite>— Priya M., Coffee Enthusiast</cite>
+      </div>
+      <div class="testi-card">
+        <p>"Came for the coffee, stayed for the community. Ember & Oak feels like home."</p>
+        <cite>— James R., Neighbour</cite>
+      </div>
+    </div>
+    <div class="testi-controls">
+      <button id="prevTesti">←</button>
+      <button id="nextTesti">→</button>
+    </div>
+  </section>
+
+  <!-- CONTACT / HOURS -->
+  <section class="contact" id="contact">
+    <div class="contact-info">
+      <span class="section-tag">Find Us</span>
+      <h2 class="section-title">Come say<br><em>hello</em></h2>
+      <div class="info-block">
+        <h4>Address</h4>
+        <p>42 Maple Street<br>Downtown District</p>
+      </div>
+      <div class="info-block">
+        <h4>Hours</h4>
+        <p>Mon – Fri: 7am – 8pm<br>Sat – Sun: 8am – 9pm</p>
+      </div>
+      <div class="info-block">
+        <h4>Contact</h4>
+        <p>hello@emberandoak.com<br>+1 (555) 204-3810</p>
+      </div>
+      <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+    <form class="contact-form" id="contactForm">
+      <h3>Leave a message</h3>
+      <div class="form-group">
+        <input type="text" id="name" placeholder=" " required/>
+        <label for="name">Your Name</label>
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" placeholder=" " required/>
+        <label for="email">Email Address</label>
+      </div>
+      <div class="form-group">
+        <textarea id="message" rows="4" placeholder=" " required></textarea>
+        <label for="message">Message</label>
+      </div>
+      <button type="submit" class="btn-primary full">Send Message</button>
+      <p class="form-success" id="formSuccess">Thanks! We'll be in touch soon ☕</p>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-logo">Ember <span>&</span> Oak</div>
+    <p>© 2026 Ember & Oak Coffee House. All rights reserved.</p>
+    <p class="footer-tagline">Brewed with love. Served with soul.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
